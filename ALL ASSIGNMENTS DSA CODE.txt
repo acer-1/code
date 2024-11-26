@@ -1,0 +1,2141 @@
+1_A : A. Create Binary tree and perform following operations: 
+a. Insert 
+b. Display 
+c. Find Depth of a tree 
+d. Display leaf-nodes 
+e. Create a copy of a tree.
+
+
+
+
+#include<iostream>
+#include<queue>
+using namespace std;
+
+class Node
+{
+    public:
+        int data;
+        Node* left;
+        Node* right;
+
+        Node(int data){
+            this->  data = data;
+            this -> left = NULL;
+            this -> right = NULL;
+        }
+};
+
+Node* BuildTree(Node* &root)
+{
+    int data;
+    // cout<<"Enter data"<<endl;
+    cin>>data;
+    root=new Node(data);
+
+    if(data==-1)
+        return NULL;
+    
+    cout<<"Enter data left to "<<data<<endl;
+    root->left=BuildTree(root->left);
+    cout<<"Enter data right to "<<data<<endl;
+    root->right=BuildTree(root->right);
+
+    return root;
+
+}
+
+void Display(Node* root)
+{
+    queue<Node*>q;
+    q.push(root);
+    q.push(NULL);
+
+    while(!q.empty())
+    {
+        Node* temp = q.front();
+        q.pop();
+        
+        if(temp==NULL)
+        {
+            cout<<endl;
+            if(!q.empty())
+            {
+                q.push(NULL);
+            }
+        }
+        else
+        {
+            cout<<temp->data<<" ";
+            if(temp->left)
+                q.push(temp->left);
+            if(temp->right)
+                 q.push(temp->right);
+        }
+    }
+}
+
+Node* CopyOfTree(Node* root)
+{
+    if(root==NULL)
+        return NULL;
+    
+    Node* temp=root;
+    temp->left=CopyOfTree(root->left);
+    temp->right=CopyOfTree(root->right);
+
+    return temp;
+}
+
+void displayLeafNode(Node* root)
+{
+    if(root==NULL)
+        return;
+    
+    if(root->left==NULL && root->right==NULL)
+        cout<<root->data<<" ";
+    displayLeafNode(root->left);
+    displayLeafNode(root->right);  
+
+}
+
+int height(Node* root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    int left = height(root->left);
+    int right = height(root->right);
+    return 1 + max(left,right);
+}   
+
+
+int main(){
+    
+    Node* root = NULL;
+    int choise;
+    int data;
+    int count = 1;
+    
+    // input
+    // 1 2 3 -1 -1 4 -1 -1 5 6 -1 -1  -1 -1
+    
+    do{
+    
+    cout<<"ENTER YOUR CHOISE"<<endl;
+    cout<<"1.insert"<<endl;
+    cout<<"2.Display"<<endl;
+    cout<<"3.height of tree "<<endl;
+    cout<<"4.Leaf Node"<<endl;
+    cout<<"5.Copy Tree" <<endl;
+    cout<<"6.exit " <<endl<<endl;
+    cin>>choise;
+    
+    switch(choise){
+        case 1:
+            cout<<"insert number :"<<endl;
+            BuildTree(root);          
+            break;
+        case 2:
+            cout<<"binary tree "<<endl;
+            Display(root);
+            break; 
+        case 3: 
+            cout<<"height of tree is : "<<height(root);
+            break;  
+        case 4:
+            cout<<"leaf node"<<endl;
+            displayLeafNode(root);
+            break;
+        case 5:
+        {
+            cout<<"Copy of tree "<<endl;
+            Node* temp = CopyOfTree(root);
+            Display(temp);
+            break;
+        }        
+        case 6:
+        {
+            break;
+        }
+    }
+    cout<<endl<<endl<<endl;
+    }while(choise!=6);
+}
+
+
+
+
+
+
+
+1_B : Implement binary search tree and perform following operations: 
+a. Insert b. Delete c. Display d. Search e. BFS (Level wise print)
+
+#include<iostream>
+#include<queue>
+using namespace std;
+
+class Node{
+    public:
+        int data;
+        Node* left;
+        Node* right;
+
+    Node(int d){
+        
+        this->data=d;
+        this->left=NULL;
+        this->right=NULL;
+    
+    }
+
+};
+
+Node* insertintoBST(Node* root ,int d){
+
+    if( root == NULL ){
+        
+        root = new Node(d) ; 
+        return root;
+    }
+
+    if( d > root -> data){
+        root -> right = insertintoBST(root -> right ,d);
+    }
+    else{
+        root -> left = insertintoBST(root -> left ,d);
+    }
+
+    return root;
+
+}
+
+void take_input(Node*& root){
+
+    int data;
+    cin>> data;
+
+    while(data != -1){
+        root = insertintoBST(root ,data);
+        cin >> data;
+    }
+
+}
+
+void Display(Node* root)
+{
+    queue<Node*>q;
+    q.push(root);
+    q.push(NULL);
+
+    while(!q.empty())
+    {
+        Node* temp = q.front();
+        q.pop();
+        
+        if(temp==NULL)
+        {
+            cout<<endl;
+            if(!q.empty())
+            {
+                q.push(NULL);
+            }
+        }
+        else
+        {
+            cout<<temp->data<<" ";
+            if(temp->left)
+                q.push(temp->left);
+            if(temp->right)
+                 q.push(temp->right);
+        }
+    }
+}
+
+bool search_BST(Node* root , int val){
+
+    if(root == NULL){
+        return  false;
+    }
+
+    if(root-> data == val){
+        return true;
+    }
+
+    if(root->data > val){
+        return search_BST(root->left , val);
+    }
+    else{
+        return search_BST(root -> right ,val);
+    }
+}
+
+Node* min_val(Node* root){
+
+    Node* temp = root;
+
+    while (temp -> left != NULL){
+         
+        temp = temp -> left;
+    }
+
+    return temp;
+    
+}
+
+Node* max_val(Node* root){
+
+    Node* temp = root;
+
+    while (temp -> right != NULL){
+         
+        temp = temp -> right;
+    }
+
+    return temp;
+    
+}
+
+Node* deletefromBST(Node* root , int val){
+
+    if(root == NULL){
+        return root;
+    }
+
+    if(root -> data == val){
+        //0 child
+        if(root->left == NULL && root->right == NULL){
+            delete root;
+            return NULL;
+        }
+
+        //1  left child
+        if(root->left != NULL && root->right ==NULL){
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        //1 right child
+        if(root->left == NULL && root->right != NULL){
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        }
+
+        //2 child
+        if(root->left != NULL && root->right != NULL){
+            int min_value = min_val(root -> right) -> data;
+            root->data = min_value;
+            root->right = deletefromBST(root->right , min_value);
+            return root;
+        }
+
+    }
+    else if(root -> data > val){
+        root -> left = deletefromBST(root->left , val);
+        return root;
+    }
+    else{
+        root->right = deletefromBST(root->right , val);
+        return root;
+    }
+}
+
+
+int main() {
+    Node* root = NULL;
+    int choice;
+    bool run = true;
+
+    while (run) {
+        cout << "1. Create BST" << endl;
+        cout << "2. Display BST" << endl;
+        cout << "3. Search an element in BST" << endl;
+        cout << "4. Delete an element from BST" << endl;
+        cout << "5. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                cout << "enter data bst " << endl;
+                take_input(root);
+                break;
+            case 2:
+                cout << "printing the BST:" << endl;
+                Display(root);
+                break;
+            case 3: {
+                int key;
+                cout << " search element: ";
+                cin >> key;
+                if (search_BST(root, key)) {
+                    cout << "element is present." << endl;
+                } else {
+                    cout << "element is not present." << endl;
+                }
+                break;
+            }
+            case 4: {
+                int key;
+                cout << "enter delete element: ";
+                cin >> key;
+                root = deletefromBST(root, key);
+                cout << "element deleted " << endl;
+                Display(root);
+                break;
+            }
+            case 5:
+                run = false;
+                cout << "Exit" << endl;
+                break;
+
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+2_A : Construct an expression tree from postfix expression and perform non- recursive 
+ In-order traversals
+
+#include<iostream>
+#include<queue>
+#include<stack>
+#include<string>
+using namespace std;
+
+class node{
+    public:
+    string data;
+    node* left;
+    node* right;
+    node(string val){
+        data = val;
+        left=NULL;
+        right=NULL;
+    }
+};
+
+bool character(char s){
+    if((s>='0' && s<='9') || (s>='a' && s<='z') || (s>='A' && s<='Z')){
+        return true;
+    }
+    return false;
+}
+
+int pre(char s){
+    if(s=='/' || s=='*'){
+        return 2;
+    }
+    else if(s=='+' || s=='-'){
+        return 1;
+    }
+    return -1;
+}
+
+string infix_to_postfix(string s){
+    stack<char> st;
+    string s2;
+    for(int i=0;i<s.length();i++){
+        if(character(s[i])){
+            s2+=s[i];
+        }
+        else if(s[i]=='('){
+            st.push(s[i]);
+        }
+        else if(s[i]==')'){
+            while(!st.empty() && st.top()!='('){
+                s2+=st.top();
+                st.pop();
+            }
+            st.pop();
+        }
+        else if(s[i]=='-' && (!character(s[i-1])) && character(s[i+1])){
+            s2+='(';
+            s2+=s[i];
+            i++;
+            s2+=s[i];
+            s2+=')';
+        }
+        else{
+            while(!st.empty() && pre(s[i])<pre(st.top())){
+                s2+=st.top();
+                st.pop();
+            }
+            st.push(s[i]);
+        }
+    }
+    while(!st.empty()){
+        if(st.top()!='(')
+            s2+=st.top();
+        st.pop();
+    }
+    return s2;
+}
+
+node* postfix_tree(string s){
+    stack<node* > st;
+    for(int i=0;i<s.length();i++){
+        if(character(s[i])){
+            node* temp = new node(s.substr(i,1));
+            st.push(temp);
+        }
+        else if(s[i]=='('){
+            node* temp = new node(s.substr(i,4));
+            st.push(temp);
+            i+=3;
+        }
+        else{
+            node* temp = new node(s.substr(i,1));
+            node* ope2 = st.top();
+            st.pop();
+            node* ope1 = st.top();
+            st.pop();
+            temp->left=ope1;
+            temp->right=ope2;
+            st.push(temp);
+        }
+    }
+    return st.top();
+}
+
+void display_level_order_traversal(node* root){
+    queue<node* > q;
+    q.push(root);
+    q.push(NULL);
+    while(!q.empty()){
+        node* temp=q.front();
+        if(temp==NULL){
+            cout<<endl;
+            q.pop();
+            if(!q.empty()){
+                q.push(NULL);
+            }
+        }
+        else{
+            cout<<temp->data<<" ";
+            q.pop();
+            if(temp->left){
+                q.push(temp->left);
+            }
+            if(temp->right){
+                q.push(temp->right);
+            }
+        }
+    }
+    cout<<endl;
+}
+
+void display_in_order_traversal(node* root){
+    stack<node* > st;
+    node* temp=root;
+    while(!st.empty() || temp!=NULL){
+        while(temp!= NULL){
+            st.push(temp);
+            temp=temp->left;
+        }
+        cout<<st.top()->data <<" ";
+        temp=st.top()->right;
+        st.pop();
+    }
+    cout<<endl<<endl;
+    return ;
+}
+
+int main() {
+    node* root = NULL;
+    string s;
+    int choice;
+    do {
+        cout << "1. input expression"<<endl;
+        cout << "2. convert into postfix"<<endl;
+        cout << "3. build expression tree"<<endl;
+        cout << "4. display in-order traversal"<<endl;
+        cout << "5. exit"<<endl;
+        cout << "enter your choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                cout << "enter the infix expression: ";
+                cin >> s;
+                break;
+            case 2:
+                s = infix_to_postfix(s);
+                cout << "postfix expression: " << s << endl<<endl;
+                break;
+            case 3:
+                root=postfix_tree(s);
+                cout<<"level order traversal"<<endl<<endl;
+                display_level_order_traversal(root);
+                cout << "   " << endl<<endl;
+                break;
+            case 4:
+                cout << "in-order traversal: " << endl<<endl;
+                display_in_order_traversal(root);
+                break;
+            case 5:
+                cout << "exit " <<endl<<endl<<endl;
+                break;
+        }
+    } while (choice != 5);
+    return 0;
+}
+
+
+
+
+2_B :. Construct an expression tree from postfix expression and perform non- recursive 
+In-order, pre-order and post-order traversals 
+
+
+#include <iostream>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+class node {
+public:
+    char data;
+    node* left;
+    node* right;
+
+    node(char d) {
+        data = d;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+
+node* postfix_tree(string s) {
+    stack<node*> st;
+
+    for (int i = 0; i < s.length(); i++) {
+   
+        if (isalnum(s[i])) {
+            node* temp = new node(s[i]);
+            st.push(temp);
+        } else {
+           
+            node* temp = new node(s[i]);
+
+            node* ope2 = st.top(); st.pop();
+            node* ope1 = st.top(); st.pop();
+
+            temp->left = ope1;
+            temp->right = ope2;
+
+      
+            st.push(temp);
+        }
+    }
+
+    return st.top(); 
+}
+
+void display_IN_order_traversal(node* root) {
+    stack<node*> st;
+    node* temp = root;
+
+    while (temp != NULL || !st.empty()) {
+        
+        while (temp != NULL) {
+            st.push(temp);
+            temp = temp->left;
+        }
+
+        
+        temp = st.top();
+        st.pop();
+
+        cout << temp->data << " ";
+
+    
+        temp = temp->right;
+    }
+    cout << endl;
+}
+
+void display_pre_order_traversal(node* root) {
+    if (root == NULL) return;
+
+    stack<node*> st;
+    st.push(root);
+
+    while (!st.empty()) {
+        node* temp = st.top();
+        cout << temp->data << " ";
+        st.pop();
+
+      
+        if (temp->right) {
+            st.push(temp->right);
+        }
+        if (temp->left) {
+            st.push(temp->left);
+        }
+    }
+    cout << endl;
+}
+
+void display_post_order_traversal(node* root) {
+    if (root == NULL) return;
+
+    stack<node*> st1, st2;
+    st1.push(root);
+
+    while (!st1.empty()) {
+        node* temp = st1.top();
+        st1.pop();
+        st2.push(temp);
+
+        
+        if (temp->left) {
+            st1.push(temp->left);
+        }
+        if (temp->right) {
+            st1.push(temp->right);
+        }
+    }
+
+    while (!st2.empty()) {
+        cout << st2.top()->data << " ";
+        st2.pop();
+    }
+    cout << endl;
+}
+
+void display_level_order_traversal(node* root) {
+    if (root == NULL) return;
+
+    queue<node*> q;
+    q.push(root);
+    q.push(NULL); 
+
+    while (!q.empty()) {
+        node* temp = q.front();
+        q.pop();
+
+        if (temp == NULL) {
+            cout << endl; 
+            if (!q.empty()) {
+                q.push(NULL); 
+            }
+        } else {
+            cout << temp->data << " ";
+            if (temp->left) {
+                q.push(temp->left);
+            }
+            if (temp->right) {
+                q.push(temp->right);
+            }
+        }
+    }
+}
+
+int main() {
+    node* root = NULL;
+
+    string postfix_expr;
+    cout << "Enter a valid postfix expression: ";
+    cin >> postfix_expr;
+
+  
+    root = postfix_tree(postfix_expr);
+
+    int choice;
+
+    //a+b*c-d/e
+    do {
+        cout << "ENTER YOUR CHOICE" << endl;
+        cout << "1. IN_Order_traversal" << endl;
+        cout << "2. Pre_Order_traversal" << endl;
+        cout << "3. Post_Order_traversal" << endl;
+        cout << "4. Level_Order_traversal" << endl;
+        cout << "5. EXIT" << endl;
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "IN_ORDER: ";
+                display_IN_order_traversal(root);
+                break;
+
+            case 2:
+                cout << "PRE_ORDER: ";
+                display_pre_order_traversal(root);
+                break;
+
+            case 3:
+                cout << "POST_ORDER: ";
+                display_post_order_traversal(root);
+                break;
+
+            case 4:
+                cout << "LEVEL_ORDER: ";
+                display_level_order_traversal(root);
+                break;
+
+            case 5:
+                cout << "Thank you !!!" << endl;
+                break;
+        }
+        cout << endl;
+
+    } while (choice != 5);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+3_A :A. Consider a friend’s network on face book social web site. Model it as a graph to 
+represent each node as a user and a link to represent the friend relationship between 
+them. Store data such as date of birth, number of comments for each user. 
+1. Find who is having maximum friends 
+2. Find who has post maximum and minimum comments 
+3. Find users having birthday in this month 
+Hint: (Use adjacency list representation and perform DFS and BFS traversals).
+
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<list>
+#include <sstream>
+#include <iomanip>
+#include <ctime>
+#include <chrono>
+using namespace std;
+
+class user
+{
+    public:
+    string name;
+    int frnds;
+    int comments;
+    string dob;
+     
+    user(string a, int b, int c, string d)
+    {
+        name = a;
+        frnds = b;
+        comments = c;
+        dob = d;
+    }
+
+    bool operator==(const user& other) const {
+        return name == other.name && dob == other.dob;  
+    }
+
+};
+
+namespace std {
+    template<>
+    struct hash<user>
+    {
+        size_t operator()(const user& u) const
+        {
+            return hash<string>()(u.name) ^ hash<string>()(u.dob);  
+        }
+    };
+}
+
+void AdjListMaker(vector<pair<user, user>> app, unordered_map<user,list<user>> &AdjList)
+{
+    int n = app.size();
+    for(int i=0; i<n; i++)
+    {
+        AdjList[app[i].first].push_back(app[i].second);
+        AdjList[app[i].second].push_back(app[i].first);
+    }
+}
+
+pair<string, int> User_having_max_friends(unordered_map<user,list<user>> &AdjList)
+{
+    int mini = -1;
+    string ans;
+    for(auto &i:AdjList)
+    {
+        user p = i.first;
+        if (p.frnds>mini)
+        {
+            mini = p.frnds;
+            ans = p.name;
+        }
+    }
+    return make_pair(ans, mini);
+}
+
+pair<string, int> User_having_max_comments(unordered_map<user,list<user>> &AdjList)
+{
+    int mini = -1;
+    string ans;
+    for(auto &i:AdjList)
+    {
+        user p = i.first;
+        if (p.comments>mini)
+        {
+            mini = p.comments;
+            ans = p.name;
+        }
+    }
+    return make_pair(ans, mini);
+}
+
+pair<string, int> User_having_min_comments(unordered_map<user,list<user>> &AdjList)
+{
+    int maxi = 100000;
+    string ans;
+    for(auto &i:AdjList)
+    {
+        user p = i.first;
+        if (p.comments<maxi)
+        {
+            maxi = p.comments;
+            ans = p.name;
+        }
+    }
+    return make_pair(ans, maxi);
+}
+
+vector<string> Users_having_birthday_in_this_month(unordered_map<user,list<user>> &AdjList)
+{
+    vector<string> ans;
+    if(AdjList.size()==0)
+    {
+        cout<<"No user is Present "<<endl;
+        return ans;
+    }
+
+    auto now = chrono::system_clock::now();
+    time_t now_c = chrono::system_clock::to_time_t(now);
+    tm* now_tm = localtime(&now_c);
+
+    for(auto &i: AdjList)
+    {
+        user p = i.first;
+        int user_bday_month = stoi(p.dob.substr(4,2));
+        
+        if(user_bday_month == now_tm->tm_mon + 1)
+        {
+            ans.push_back(p.name);
+        }
+    }
+}
+int main() {
+    vector<pair<user, user>> app;
+    unordered_map<user, list<user>> AdjList;
+
+    app.push_back(make_pair(user("rahul", 200, 10, "20051026"), user("rushi", 350, 80, "20050826")));
+    app.push_back(make_pair(user("rahul", 200, 10, "20051026"), user("ashutosh", 450, 50, "20051012")));
+    app.push_back(make_pair(user("ashutosh", 450, 50, "20051012"), user("rushi", 350, 80, "20050826")));
+    app.push_back(make_pair(user("Manish", 500, 12, "20041226"), user("rushi", 350, 80, "20050826")));
+    app.push_back(make_pair(user("rahul", 200, 10, "20051026"), user("Manish", 500, 12, "20041226")));
+    app.push_back(make_pair(user("ashutosh", 450, 50, "20051012"), user("Manish", 500, 12, "20041226")));
+    app.push_back(make_pair(user("nitin", 340, 34, "20040321"), user("rushi", 350, 80, "20050826")));
+    app.push_back(make_pair(user("rahul", 200, 10, "20051026"), user("nitin", 340, 34, "20040321")));
+    app.push_back(make_pair(user("ashutosh", 450, 50, "20051012"), user("nitin", 340, 34, "20040321")));
+
+    AdjListMaker(app, AdjList);
+
+    int choice;
+    do {
+        
+        cout << "1. User with max friends"<<endl;
+        cout << "2. User with max comments"<<endl;
+        cout << "3. User with min comments"<<endl;
+        cout << "4. Users having birthdays in this month"<<endl;
+        cout << "5. Exit"<<endl;
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                pair<string, int> result = User_having_max_friends(AdjList);
+                cout  << result.first << " has max friends: " << result.second << endl;
+                break;
+            }
+            case 2: {
+                pair<string, int> result = User_having_max_comments(AdjList);
+                cout  << result.first << " has max comments: "<< result.second << endl;
+                break;
+            }
+            case 3: {
+                pair<string, int> result = User_having_min_comments(AdjList);
+                cout  << result.first << " has min comments: " << result.second << endl;
+                break;
+            }
+            case 4: {
+                cout << "Users having birthdays in this month: "<<endl;
+                vector<string> birthdays = Users_having_birthday_in_this_month(AdjList);
+                for (const string& name : birthdays) {
+                    cout << name << " ";
+                }
+                cout << endl;
+                break;
+            }
+            case 5:
+                cout << "Exit";
+                break;
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+3_B :B. There are flight paths between cities. If there is a flight between city A and city B 
+then there is an edge between the cities. The cost of the edge can be the time that 
+flight take to reach city B from A, or the amount of fuel used for the journey. 
+Represent this as a graph. The node can be represented by airport name or name of the 
+city. Use adjacency list representation of the graph or use adjacency matrix 
+representation of the graph. Check whether the graph is connected or not. Justify the 
+storage representation used. 
+
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<list>
+#include<set>
+using namespace std;
+
+void create_adjacency_list(vector<pair<char, pair<char, int>>> Input, unordered_map<char,list<char>> &AdjList)
+{
+    if(Input.size() == 0)
+    {
+        return;
+    }
+
+    for(auto i:Input)
+    {
+        AdjList[i.first].push_back(i.second.first);
+        AdjList[i.second.first].push_back(i.first); 
+    }
+}
+
+void DFS(char node, unordered_map<char, list<char>> &AdjList, set<char> &visited)
+{
+    visited.insert(node);
+    
+    for(auto neighbor : AdjList[node])
+    {
+        if(visited.find(neighbor) == visited.end())
+        {
+            DFS(neighbor, AdjList, visited);
+        }
+    }
+}
+
+bool isConnected(unordered_map<char, list<char>> &AdjList)
+{
+    if(AdjList.empty()) return true;
+    
+    set<char> visited;
+    char startNode = AdjList.begin()->first; 
+
+    DFS(startNode, AdjList, visited);
+    
+    return visited.size() == AdjList.size();
+}
+
+int main()
+{
+    vector<pair<char, pair<char, int>>> Input;
+
+    Input.push_back(make_pair('A', make_pair('B', 50)));
+    Input.push_back(make_pair('B', make_pair('C', 60)));
+    Input.push_back(make_pair('C', make_pair('A', 70)));
+    Input.push_back(make_pair('A', make_pair('D', 80)));
+    Input.push_back(make_pair('D', make_pair('C', 90)));
+    Input.push_back(make_pair('E', make_pair('F', 100)));
+    // Input.push_back(make_pair('D', make_pair('F', 110)));
+
+    unordered_map<char, list<char>> AdjList;
+
+    create_adjacency_list(Input, AdjList);
+    
+    while(true)
+    {
+        int a;
+        cout<<endl<<"choose a option"<<endl;
+        cout<<"1) check wheather graph is connected or not"<<endl
+        <<"2) Exit"<<endl;
+        cin>>a;
+
+        if(a==1)
+        {
+            if(isConnected(AdjList))
+            {
+                cout << "The graph is connected." << endl;
+            }
+            else
+            {
+                cout << "The graph is not connected." << endl;
+            }
+        }
+
+        else if(a==2)
+        {
+            break;
+            cout<<endl<<endl;
+        }
+        else
+        {
+            cout<<"invalid option"<<endl<<endl;
+
+        }
+
+    }
+
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+4 :You are given an undirected weighted graph with nodes and edges. The nodes are 
+numbered from and to. Find the total weight of the minimum spanning tree, as well as 
+one specific minimum spanning tree using Prims/Kruskal’s algorithm. Note that there 
+may be multiple different minimum spanning trees. You need to construct any one of 
+them. 
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct edge {
+    int u, v, w;
+    bool operator<(const edge& other) const {
+        return w < other.w;
+    }
+};
+
+int find_set(int v, vector<int>& parent) {
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v], parent);
+}
+
+void union_sets(int a, int b, vector<int>& parent, vector<int>& rank) {
+    a = find_set(a, parent);
+    b = find_set(b, parent);
+    if (a != b) {
+        if (rank[a] < rank[b])
+            swap(a, b);
+        parent[b] = a;
+        if (rank[a] == rank[b])
+            rank[a]++;
+    }
+}
+
+vector<pair<pair<int, int>, int>> calculate_mst(int n, vector<pair<pair<int, int>, int>>& edges) {
+    vector<edge> graph;
+    for (auto e : edges) {
+        graph.push_back({e.first.first, e.first.second, e.second});
+    }
+    sort(graph.begin(), graph.end());
+
+    vector<int> parent(n + 1);
+    vector<int> rank(n + 1, 0);
+    for (int i = 1; i <= n; i++)
+        parent[i] = i;
+
+    vector<pair<pair<int, int>, int>> result;
+    for (auto e : graph) {
+        if (find_set(e.u, parent) != find_set(e.v, parent)) {
+            result.push_back({{e.u, e.v}, e.w});
+            union_sets(e.u, e.v, parent, rank);
+        }
+    }
+    return result;
+}
+
+void print_menu() {
+    cout << "menu:" << endl;
+    cout << "1. add edge" << endl;
+    cout << "2. calculate mst" << endl;
+    cout << "3. exit" << endl;
+}
+
+int main() {
+    vector<pair<pair<int, int>, int>> input;
+    int choice, u, v, w, n;
+
+    cout << "enter number of vertices: ";
+    cin >> n;
+
+    while (true) {
+        print_menu();
+        cout << "enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            cout << "enter edge (u, v, weight): ";
+            cin >> u >> v >> w;
+            input.push_back(make_pair(make_pair(u, v), w));
+        } else if (choice == 2) {
+            vector<pair<pair<int, int>, int>> ans = calculate_mst(n, input);
+            int sum = 0;
+            for (int i = 0; i < ans.size(); i++) {
+                cout << ans[i].first.first << "--" << ans[i].first.second << "  w = " << ans[i].second << endl;
+                sum += ans[i].second;
+            }
+            cout << endl << "total weight of mst: " << sum << endl;
+        } else if (choice == 3) {
+            break;
+        } 
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+5 :A student wants to travel from Source (A) to destination (B). Student books a cab from A to reach B. 
+Calculate a shortest path by avoiding real time traffic to reach destination B. 
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits.h>
+
+using namespace std;
+
+struct Node {
+    int vertex, weight;
+    Node(int v, int w) : vertex(v), weight(w) {}
+};
+
+bool operator<(const Node &a, const Node &b) {
+    return a.weight > b.weight;
+}
+
+vector<int> dijkstra(int start, vector<vector<Node>>& graph, int n) {
+    vector<int> dist(n, INT_MAX);
+    priority_queue<Node> pq;
+    dist[start] = 0;
+    pq.push(Node(start, 0));
+
+    while (!pq.empty()) {
+        int u = pq.top().vertex;
+        int currentDist = pq.top().weight;
+        pq.pop();
+
+        for (const auto& neighbor : graph[u]) {
+            int v = neighbor.vertex;
+            int weight = neighbor.weight;
+
+            if (currentDist + weight < dist[v]) {
+                dist[v] = currentDist + weight;
+                pq.push(Node(v, dist[v]));
+            }
+        }
+    }
+    return dist;
+}
+void displayMenu() {
+   
+    cout << "1. Add (edge) between two nodes" << endl;
+    cout << "2. shortest path from point to another point" << endl;
+    cout << "3. Exit" << endl;
+}
+
+int main() {
+    int n, m;    
+    cout << "Enter the no of nodes in the graph: ";
+    cin >> n;
+    vector<vector<Node>> graph(n);
+    int choice;
+    while (true) {
+        displayMenu();
+        cout << "Enter your choice: ";
+        cin >> choice;
+        if (choice == 1) {
+            int u, v, w;
+            cout << "Enter the source node : ";
+            cin >> u;
+            cout << "Enter the destination node : ";
+            cin >> v;
+            cout << "Enter the distance between this locations: ";
+            cin >> w;
+
+            graph[u].push_back(Node(v, w));
+            graph[v].push_back(Node(u, w));
+        }
+        else if (choice == 2) {
+            int source, destination;
+            cout << "Enter the source point: ";
+            cin >> source;
+            cout << "Enter the destination point: ";
+            cin >> destination;
+            vector<int> shortestDistances = dijkstra(source, graph, n);
+            if (shortestDistances[destination] != INT_MAX) {
+                cout << "shortest path from location " << source << " to  " << destination << " : " << shortestDistances[destination] << endl;
+            }
+        }
+        else if (choice == 3) {
+            cout << "Exit" << endl;
+            break;
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+6 :Read the marks obtained by students of second year in an online examination of 
+particular subject. Find out maximum and minimum marks obtained in that subject. 
+Use heap data structure. Analyse the algorithm.
+
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n = 0;
+    priority_queue<int> maxHeap;
+    priority_queue<int, vector<int>, greater<int>> minHeap;
+
+    while (true) {
+        int choice;
+        cout << "1. Enter marks of students" << endl;
+        cout << "2. Find maximum marks" << endl;
+        cout << "3. Find minimum marks" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            cout << "Enter the number of students: ";
+            cin >> n;
+
+            cout << "Enter the marks of students: ";
+            for (int i = 0; i < n; ++i) {
+                int mark;
+                cin >> mark;
+                maxHeap.push(mark);
+                minHeap.push(mark);
+            }
+        }
+        else if (choice == 2) {
+            if (n == 0) {
+                cout << "Please enter the marks " << endl;
+            } else {
+                int maxMarks = maxHeap.top();
+                cout << "Maximum marks : " << maxMarks << endl;
+            }
+        }
+        else if (choice == 3) {
+            if (n == 0) {
+                cout << "Please enter the marks " << endl;
+            } else {
+                int minMarks = minHeap.top();
+                cout << "Minimum marks :  " << minMarks << endl;
+            }
+        }
+        else if (choice == 4) {
+            cout << "Exit" << endl;
+            break;
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+7 :Consider a telephone book database of N clients. Make use of a hash table implementation to quickly 
+look up client‘s telephone number. Make use of two collision handling techniques and compare them 
+using number of comparisons required to find a set of telephone numbers 
+
+#include <iostream>
+#include <list>
+#include <vector>
+using namespace std;
+
+const int table_size = 10;
+
+struct client {
+    string name;
+    string phonenumber;
+};
+
+int hashfunction(string name, int tablesize) {
+    int hash = 0;
+    for (char c : name) {
+        hash += c;
+    }
+    return hash % tablesize;
+}
+
+class hashtablechaining {
+private:
+    vector<list<pair<string, string>>> table;
+public:
+    hashtablechaining() {
+        table.resize(table_size);
+    }
+
+    void insert(string name, string phonenumber) {
+        int index = hashfunction(name, table_size);
+        table[index].push_back(make_pair(name, phonenumber));
+    }
+
+    string search(string name, int& comparisons) {
+        int index = hashfunction(name, table_size);
+        for (auto& entry : table[index]) {
+            comparisons++;
+            if (entry.first == name) {
+                return entry.second;
+            }
+        }
+        return "not found";
+    }
+};
+
+class hashtablelinearprobing {
+private:
+    vector<pair<string, string>> table;
+    vector<bool> isoccupied;
+public:
+    hashtablelinearprobing() {
+        table.resize(table_size, {"", ""});
+        isoccupied.resize(table_size, false);
+    }
+
+    void insert(string name, string phonenumber) {
+        int index = hashfunction(name, table_size);
+        while (isoccupied[index]) {
+            index = (index + 1) % table_size;
+        }
+        table[index] = make_pair(name, phonenumber);
+        isoccupied[index] = true;
+    }
+
+    string search(string name, int& comparisons) {
+        int index = hashfunction(name, table_size);
+        int startindex = index;
+
+        while (isoccupied[index]) {
+            comparisons++;
+            if (table[index].first == name) {
+                return table[index].second;
+            }
+            index = (index + 1) % table_size;
+            if (index == startindex) {
+                break;
+            }
+        }
+        return "not found";
+    }
+};
+
+void displaymenu() {
+    cout << "\nmenu:\n";
+    cout << "1. insert client\n";
+    cout << "2. search client\n";
+    cout << "3. exit\n";
+    cout << "enter your choice: ";
+}
+int main() {
+    hashtablechaining htchaining;
+    hashtablelinearprobing htlinearprobing;
+    int choice;
+
+    while (true) {
+        displaymenu();
+        cin >> choice;
+        if (choice == 1) {
+            string name, phonenumber;
+            cout << "enter client name: ";
+            cin >> name;
+            cout << "enter phone number: ";
+           cin >> phonenumber;
+            htchaining.insert(name, phonenumber);
+            htlinearprobing.insert(name, phonenumber);
+            cout << "client inserted successfully.\n";
+        } else if (choice == 2) {
+            string name;
+            cout << "enter client name to search: ";
+            cin >> name;
+            int comparisonschaining = 0, comparisonslinear = 0;
+            string phonechaining = htchaining.search(name, comparisonschaining);
+            string phonelinear = htlinearprobing.search(name, comparisonslinear);
+            cout << "\nsearch results:\n";
+            cout << "separate chaining - phone: " << phonechaining << ", comparisons: " << comparisonschaining << "\n";
+            cout << "linear probing - phone: " << phonelinear << ", comparisons: " << comparisonslinear << "\n";
+
+        } else if (choice == 3) {
+            cout << "exiting program. goodbye!\n";
+            break;
+
+        } else {
+            cout << "invalid choice. please try again.\n";
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+8_A :. Read the Credits obtained to students in different club activities and sort the credits 
+using merge sort. 
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void merge(vector<int>& credits, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+    vector<int> leftarr(n1), rightarr(n2);
+    
+    for (int i = 0; i < n1; i++)
+        leftarr[i] = credits[left + i];
+    for (int i = 0; i < n2; i++)
+        rightarr[i] = credits[mid + 1 + i];
+    
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (leftarr[i] <= rightarr[j]) {
+            credits[k++] = leftarr[i++];
+        } else {
+            credits[k++] = rightarr[j++];
+        }
+    }
+    while (i < n1) {
+        credits[k++] = leftarr[i++];
+    }
+    while (j < n2) {
+        credits[k++] = rightarr[j++];
+    }
+}
+
+void mergesort(vector<int>& credits, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergesort(credits, left, mid);
+        mergesort(credits, mid + 1, right);
+        merge(credits, left, mid, right);
+    }
+}
+
+void displaymenu() {
+    cout << "\nmenu:\n";
+    cout << "1. enter credits\n";
+    cout << "2. display sorted credits\n";
+    cout << "3. exit\n";
+    cout << "enter your choice: ";
+}
+
+int main() {
+    vector<int> credits;
+    int choice;
+
+    while (true) {
+        displaymenu();
+        cin >> choice;
+
+        if (choice == 1) {
+            int n, credit;
+            cout << "enter the number of students: ";
+            cin >> n;
+            credits.clear();
+            for (int i = 0; i < n; i++) {
+                cout << "enter credits for student " << i + 1 << ": ";
+                cin >> credit;
+                credits.push_back(credit);
+            }
+            cout << "credits recorded successfully.\n";
+
+        } else if (choice == 2) {
+            if (credits.empty()) {
+                cout << "no credits to sort. please enter credits first.\n";
+            } else {
+                mergesort(credits, 0, credits.size() - 1);
+                cout << "sorted credits: ";
+                for (int credit : credits) {
+                    cout << credit << " ";
+                }
+                cout << "\n";
+            }
+
+        } else if (choice == 3) {
+            cout << "exiting program. goodbye!\n";
+            break;
+
+        } else {
+            cout << "invalid choice. please try again.\n";
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+8_B : Implement quick sort for sorting students credits they received in last 2 years and 
+display the names of top 3 students. 
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+struct student {
+    string name;
+    int credits;
+};
+
+int partition(vector<student>& students, int low, int high) {
+    int pivot = students[high].credits;
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (students[j].credits >= pivot) {
+            i++;
+            swap(students[i], students[j]);
+        }
+    }
+    swap(students[i + 1], students[high]);
+    return i + 1;
+}
+
+void quicksort(vector<student>& students, int low, int high) {
+    if (low < high) {
+        int pi = partition(students, low, high);
+        quicksort(students, low, pi - 1);
+        quicksort(students, pi + 1, high);
+    }
+}
+
+void displaymenu() {
+    cout << "\nmenu:\n";
+    cout << "1. enter students data\n";
+    cout << "2. display top 3 students\n";
+    cout << "3. exit\n";
+    cout << "enter your choice: ";
+}
+
+int main() {
+    vector<student> students;
+    int choice;
+
+    while (true) {
+        displaymenu();
+        cin >> choice;
+
+        if (choice == 1) {
+            int n;
+            cout << "enter the number of students: ";
+            cin >> n;
+            students.clear();
+            for (int i = 0; i < n; i++) {
+                student s;
+                cout << "enter name of student " << i + 1 << ": ";
+                cin >> s.name;
+                cout << "enter credits received by " << s.name << ": ";
+                cin >> s.credits;
+                students.push_back(s);
+            }
+            cout << "students data recorded successfully.\n";
+
+        } else if (choice == 2) {
+            if (students.size() < 3) {
+                cout << "not enough students to display top 3. please enter more data.\n";
+            } else {
+                quicksort(students, 0, students.size() - 1);
+                cout << "top 3 students:\n";
+                for (int i = 0; i < 3; i++) {
+                    cout << students[i].name << " with credits: " << students[i].credits << "\n";
+                }
+            }
+
+        } else if (choice == 3) {
+            cout << "exiting program. goodbye!\n";
+            break;
+
+        } else {
+            cout << "invalid choice. please try again.\n";
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+9_A : Given a set of items with weights and values, and a knapsack capacity, find the maximum total 
+value that can be obtained by selecting fractions of items using the Greedy strategy.
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct item {
+    int weight;
+    int value;
+
+    item(int w, int v) : weight(w), value(v) {}
+
+    double valueperweight() const {
+        return (double)value / (double)weight;
+    }
+};
+
+bool compare(const item &a, const item &b) {
+    return a.valueperweight() > b.valueperweight();
+}
+
+double fractionalknapsack(int knapsackcapacity, vector<item> &items) {
+    sort(items.begin(), items.end(), compare);
+
+    double totalvalue = 0.0;
+    int currentweight = 0;
+
+    for (const item &it : items) {
+        if (currentweight + it.weight <= knapsackcapacity) {
+            currentweight += it.weight;
+            totalvalue += it.value;
+        } else {
+            int remainingcapacity = knapsackcapacity - currentweight;
+            totalvalue += it.valueperweight() * remainingcapacity;
+            break;
+        }
+    }
+
+    return totalvalue;
+}
+
+void displaymenu() {
+    cout << "\nmenu:\n";
+    cout << "1. enter items\n";
+    cout << "2. calculate maximum value\n";
+    cout << "3. exit\n";
+    cout << "enter your choice: ";
+}
+
+int main() {
+    vector<item> items;
+    int knapsackcapacity, choice;
+
+    while (true) {
+        displaymenu();
+        cin >> choice;
+
+        if (choice == 1) {
+            int n;
+            cout << "enter the number of items: ";
+            cin >> n;
+            cout << "enter the knapsack capacity: ";
+            cin >> knapsackcapacity;
+
+            items.clear();
+            for (int i = 0; i < n; i++) {
+                int weight, value;
+                cout << "enter weight and value for item " << i + 1 << ": ";
+                cin >> weight >> value;
+                items.push_back(item(weight, value));
+            }
+            cout << "items recorded successfully.\n";
+
+        } else if (choice == 2) {
+            if (items.empty()) {
+                cout << "no items entered. please add items first.\n";
+            } else {
+                double maxvalue = fractionalknapsack(knapsackcapacity, items);
+                cout << "maximum total value in the knapsack: " << maxvalue << endl;
+            }
+
+        } else if (choice == 3) {
+            cout << "exiting program. goodbye!\n";
+            break;
+
+        } else {
+            cout << "invalid choice. please try again.\n";
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+9_B :There are 5 jobs, each with a deadline and associated profit. The Select a subset of jobs that 
+maximize the total profit while ensuring that each selected job is completed within its deadline. 
+Display the selected jobs with their deadlines. 
+
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct job {
+    char id;
+    int deadline;
+    int profit;
+};
+
+bool compare(job a, job b) {
+    return a.profit > b.profit;
+}
+
+void jobscheduling(vector<job> &jobs, int n) {
+    sort(jobs.begin(), jobs.end(), compare);
+    vector<int> result(n, -1);
+    vector<bool> slot(n, false);
+    int totalprofit = 0;
+
+    for (int i = 0; i < jobs.size(); i++) {
+        for (int j = min(n, jobs[i].deadline) - 1; j >= 0; j--) {
+            if (!slot[j]) {
+                result[j] = i;
+                slot[j] = true;
+                totalprofit += jobs[i].profit;
+                break;
+            }
+        }
+    }
+
+    cout << "selected jobs with their deadlines:\n";
+    for (int i = 0; i < n; i++) {
+        if (slot[i]) {
+            cout << "job " << jobs[result[i]].id << " with deadline " << jobs[result[i]].deadline << "\n";
+        }
+    }
+    cout << "total profit: " << totalprofit << endl;
+}
+
+int main() {
+    int choice;
+    vector<job> jobs;
+    int n;
+
+    do {
+        cout << "\nmenu:\n";
+        cout << "1. add job\n";
+        cout << "2. perform job scheduling\n";
+        cout << "3. exit\n";
+        cout << "enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                char id;
+                int deadline, profit;
+                cout << "enter job id, deadline, and profit: ";
+                cin >> id >> deadline >> profit;
+                jobs.push_back({id, deadline, profit});
+                break;
+            }
+            case 2: {
+                if (jobs.empty()) {
+                    cout << "no jobs available. please add jobs first.\n";
+                } else {
+                    cout << "enter maximum number of time slots: ";
+                    cin >> n;
+                    jobscheduling(jobs, n);
+                }
+                break;
+            }
+            case 3:
+                cout << "exiting program.\n";
+                break;
+            default:
+                cout << "invalid choice. try again.\n";
+        }
+    } while (choice != 3);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+9_C : Given a 2D matrix tsp[][], where each row has the array of distances from that indexed city to all 
+the other cities and -1 denotes that there doesn’t exist a path between those two indexed cities. The 
+task is to print minimum cost in TSP cycle. 
+Input:  
+tsp[][] = {{-1, 10, 15, 20}, - 
+{10, -1, 35, 25},  
+{15, 35, -1, 30},  
+{20, 25, 30, -1}};
+
+#include <iostream>
+#include <vector>
+#include <limits>
+using namespace std;
+
+bool allvisited(const vector<bool>& visited) {
+    for (bool v : visited) {
+        if (!v) return false;
+    }
+    return true;
+}	
+
+void tsp(int currentcity, int count, int cost, int& mincost, vector<bool>& visited, const vector<vector<int>>& tspmatrix, int n) {
+    if (count == n && tspmatrix[currentcity][0] != -1) {
+        mincost = min(mincost, cost + tspmatrix[currentcity][0]);
+        return;
+    }
+    for (int nextcity = 0; nextcity < n; nextcity++) {
+        if (!visited[nextcity] && tspmatrix[currentcity][nextcity] != -1) {
+            visited[nextcity] = true;
+            tsp(nextcity, count + 1, cost + tspmatrix[currentcity][nextcity], mincost, visited, tspmatrix, n);
+            visited[nextcity] = false;
+        }
+    }
+}
+
+void setdistances(vector<vector<int>>& tspmatrix, int& n) {
+    cout << "enter the number of cities: ";
+    cin >> n;
+    tspmatrix.resize(n, vector<int>(n));
+    cout << "enter the distance matrix (use -1 for no path):\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> tspmatrix[i][j];
+        }
+    }
+}
+
+void solve(const vector<vector<int>>& tspmatrix, int n) {
+    if (tspmatrix.empty()) {
+        cout << "distance matrix is empty. please set the matrix first.\n";
+        return;
+    }
+    int mincost = numeric_limits<int>::max();
+    vector<bool> visited(n, false);
+    visited[0] = true;
+    tsp(0, 1, 0, mincost, visited, tspmatrix, n);
+    if (mincost == numeric_limits<int>::max()) {
+        cout << "no valid tour exists.\n";
+    } else {
+        cout << "minimum cost of tsp cycle: " << mincost << endl;
+    }
+}
+
+int main() {
+    vector<vector<int>> tspmatrix;
+    int n = 0;
+    int choice;
+
+    do {
+        cout << "\nmenu:\n";
+        cout << "1. set distance matrix\n";
+        cout << "2. solve tsp\n";
+        cout << "3. exit\n";
+        cout << "enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                setdistances(tspmatrix, n);
+                break;
+            case 2:
+                solve(tspmatrix, n);
+                break;
+            case 3:
+                cout << "exiting program.\n";
+                break;
+            default:
+                cout << "invalid choice. try again.\n";
+        }
+    } while (choice != 3);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+10 :     Place each queen one by one in different rows, starting from the topmost row. While placing a queen 
+in a row, check for clashes with already placed queens. For any column, if there is no clash then mark 
+this row and column as part of the solution by placing the queen. In case, if no safe cell found due to 
+clashes, then backtrack (i.e, undo the placement of recent queen) and return false.
+
+#include <iostream>
+using namespace std;
+
+#define n 4
+
+void printsolution(int board[n][n]) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+bool issafe(int board[n][n], int row, int col) {
+    for (int i = 0; i < row; i++) {
+        if (board[i][col] == 1) {
+            return false;
+        }
+    }
+
+    for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+        if (board[i][j] == 1) {
+            return false;
+        }
+    }
+
+    for (int i = row, j = col; i >= 0 && j < n; i--, j++) {
+        if (board[i][j] == 1) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool solvenqutil(int board[n][n], int row) {
+    if (row >= n) {
+        return true;
+    }
+
+    for (int col = 0; col < n; col++) {
+        if (issafe(board, row, col)) {
+            board[row][col] = 1;
+
+            if (solvenqutil(board, row + 1)) {
+                return true;
+            }
+
+            board[row][col] = 0;
+        }
+    }
+
+    return false;
+}
+
+bool solvenq() {
+    int board[n][n] = { { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 } };
+
+    if (solvenqutil(board, 0) == false) {
+        cout << "solution does not exist" << endl;
+        return false;
+    }
+
+    printsolution(board);
+    return true;
+}
+
+void displaymenu() {
+    cout << "\nmenu:\n";
+    cout << "1. solve 4-queen problem\n";
+    cout << "2. exit\n";
+    cout << "enter your choice: ";
+}
+
+int main() {
+    int choice;
+
+    while (true) {
+        displaymenu();
+        cin >> choice;
+
+        if (choice == 1) {
+            if (!solvenq()) {
+                cout << "no solution available.\n";
+            }
+        } else if (choice == 2) {
+            cout << "exiting program. goodbye!\n";
+            break;
+        } else {
+            cout << "invalid choice. please try again.\n";
+        }
+    }
+
+    return 0;
+}
+
+
